@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: public
+    database: flight_delays   # or your actual DB name from pgAdmin
+    schema: public
+    tables:
+      - name: flight_delays
+
+models:
+  - name: stg_flight_delays
+    description: "Cleaned and renamed flight delay data"
+    columns:
+      - name: id
+        description: "Unique row ID"
