@@ -122,10 +122,8 @@ Data source: PostgreSQL (via Streamlit secrets)
 
 ## 👨‍💻 Author
 
-**Akshay V**
-🎓 MS in Computer Science (AI/ML), SUNY Buffalo
-💼 Former Senior Solutions Engineer (SQL, XHQ, Data Integration)
-📫 [LinkedIn](https://www.linkedin.com/in/your-profile) | [GitHub](https://github.com/akshay-v)
+**Akshay Virupakshaiah**
+📫 [LinkedIn](https://www.linkedin.com/in/akshay-virupaksha/) | [GitHub]([https://github.com/Akshay-Virupaksha])
 
 ---
 
