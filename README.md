@@ -123,7 +123,7 @@ Data source: PostgreSQL (via Streamlit secrets)
 ## 👨‍💻 Author
 
 **Akshay Virupakshaiah**
-📫 [LinkedIn](https://www.linkedin.com/in/akshay-virupaksha/) | [GitHub]([https://github.com/Akshay-Virupaksha])
+📫 [LinkedIn](https://www.linkedin.com/in/akshay-virupaksha/) | [GitHub](https://github.com/Akshay-Virupaksha)
 
 ---
 
