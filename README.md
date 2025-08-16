@@ -93,11 +93,11 @@ Example View:
 
 * ✈️ **BOS → LGA** was identified as the most delayed route.
 
-Across 500,000 flights analyzed, the average arrival delay was 23.91 minutes.
+* Across 500,000 flights analyzed, the average arrival delay was 23.91 minutes.
 
 * 🌙 **Evening departures** (after 5 PM) showed a higher likelihood of delays compared to morning flights.
 
-Certain airlines had significantly better on-time performance than others, highlighting variation in delay composition.
+* Certain airlines had significantly better on-time performance than others, highlighting variation in delay composition.
 
 Data source: PostgreSQL (via Streamlit secrets)
 ---
