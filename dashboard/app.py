@@ -163,6 +163,9 @@ with col3:
     else:
         st.metric("Most Delayed Route", "—", help="No route data available.")
 
+st.write("DEBUG: airline_delay DataFrame")
+st.write(airline_delay.head())
+st.write(airline_delay.columns.tolist())
 
 # ---------- Key Insights (current data) ----------
 def show_key_insights():
