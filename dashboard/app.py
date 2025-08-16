@@ -167,7 +167,7 @@ with col3:
 def show_key_insights(
     route_agg, route_agg_all, airline_delay, airport_perf, daily_delay, min_flights_for_stability: int
 ):
-    st.markdown("### 📌 Key Insights (current data)")
+    st.markdown("### 📌 Key Insights (sample current data)")
     insights = []
 
     # 1) Most delayed route
