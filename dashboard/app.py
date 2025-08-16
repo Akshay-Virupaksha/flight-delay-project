@@ -163,24 +163,21 @@ with col3:
     else:
         st.metric("Most Delayed Route", "—", help="No route data available.")
 
-st.write("DEBUG: airline_delay DataFrame")
-st.write(airline_delay.head())
-st.write(airline_delay.columns.tolist())
-
 # ---------- Key Insights (current data) ----------
-def show_key_insights():
+def show_key_insights(
+    route_agg, route_agg_all, airline_delay, airport_perf, daily_delay, min_flights_for_stability: int
+):
     st.markdown("### 📌 Key Insights (current data)")
-
     insights = []
 
     # 1) Most delayed route
-    if 'route_agg' in locals() and isinstance(route_agg, pd.DataFrame) and not route_agg.empty:
+    if isinstance(route_agg, pd.DataFrame) and not route_agg.empty:
         worst = route_agg.sort_values("avg_arrival_delay", ascending=False).iloc[0]
         insights.append(
             f"**{worst.origin_airport} → {worst.destination_airport}** has the highest average arrival delay "
             f"(**{worst.avg_arrival_delay:.1f} min**) among routes with ≥{min_flights_for_stability} flights."
         )
-    elif 'route_agg_all' in locals() and isinstance(route_agg_all, pd.DataFrame) and not route_agg_all.empty:
+    elif isinstance(route_agg_all, pd.DataFrame) and not route_agg_all.empty:
         worst = route_agg_all.sort_values("avg_arrival_delay", ascending=False).iloc[0]
         insights.append(
             f"**{worst.origin_airport} → {worst.destination_airport}** shows the highest average arrival delay "
@@ -188,9 +185,8 @@ def show_key_insights():
         )
 
     # 2) Most punctual airline (lowest % delayed departures)
-    if ('airline_delay' in locals() and isinstance(airline_delay, pd.DataFrame)
-        and not airline_delay.empty
-        and {"airline", "percent_delayed_departures"}.issubset(airline_delay.columns)):
+    if (isinstance(airline_delay, pd.DataFrame) and not airline_delay.empty and
+        {"airline", "percent_delayed_departures"}.issubset(airline_delay.columns)):
         best_air = airline_delay.sort_values("percent_delayed_departures").iloc[0]
         insights.append(
             f"**{best_air['airline']}** has the lowest share of delayed departures "
@@ -198,9 +194,8 @@ def show_key_insights():
         )
 
     # 3) Slowest airport by average departure delay
-    if ('airport_perf' in locals() and isinstance(airport_perf, pd.DataFrame)
-        and not airport_perf.empty
-        and {"airport", "avg_dep_delay"}.issubset(airport_perf.columns)):
+    if (isinstance(airport_perf, pd.DataFrame) and not airport_perf.empty and
+        {"airport", "avg_dep_delay"}.issubset(airport_perf.columns)):
         slow_ap = airport_perf.sort_values("avg_dep_delay", ascending=False).iloc[0]
         insights.append(
             f"**{slow_ap['airport']}** shows the highest average departure delay "
@@ -208,9 +203,8 @@ def show_key_insights():
         )
 
     # 4) Peak delay day (from daily trend)
-    if ('daily_delay' in locals() and isinstance(daily_delay, pd.DataFrame)
-        and not daily_delay.empty
-        and {"flight_date", "avg_arrival_delay"}.issubset(daily_delay.columns)):
+    if (isinstance(daily_delay, pd.DataFrame) and not daily_delay.empty and
+        {"flight_date", "avg_arrival_delay"}.issubset(daily_delay.columns)):
         dd = daily_delay.copy()
         dd["flight_date"] = pd.to_datetime(dd["flight_date"], errors="coerce")
         dd = dd.dropna(subset=["flight_date"])
@@ -226,7 +220,9 @@ def show_key_insights():
     else:
         st.info("Insights will appear once data is loaded.")
 
-show_key_insights()
+# Call this *after* you've built route_agg/route_agg_all and loaded the dataframes:
+show_key_insights(route_agg, route_agg_all, airline_delay, airport_perf, daily_delay, min_flights_for_stability)
+
 
 # ---------- Most Delayed Routes ----------
 st.subheader("🛫 Most Delayed Routes")
