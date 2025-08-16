@@ -44,6 +44,13 @@ st.markdown(
     "Insights into U.S. domestic flight delays including **route-level delays**, "
     "**airline-wise delay composition**, **airport performance**, and **daily trends**."
 )
+with st.expander("About this data"):
+    st.markdown("""
+    The dashboard uses the **U.S. Bureau of Transportation Statistics (BTS) On-Time Performance dataset**.  
+    It covers **domestic U.S. flights from 2023–2024**, including delay causes such as weather, carrier issues, and late aircraft.  
+    Data is stored in **PostgreSQL (Neon)** and refreshed through the ETL pipeline.
+    """)
+
 
 # ---------- Data Loading ----------
 @st.cache_data(show_spinner=True, ttl=600)
