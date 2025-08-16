@@ -45,63 +45,6 @@ st.markdown(
     "**airline-wise delay composition**, **airport performance**, and **daily trends**."
 )
 
-# ---------- Key Insights (dynamic from current dataset) ----------
-st.markdown("### 📌 Key Insights (current data)")
-
-insights = []
-
-# 1) Most delayed route (uses route_agg you already computed)
-#    Falls back to route_agg_all if the ≥ min_flights filter leaves it empty.
-if 'route_agg' in locals() and not route_agg.empty:
-    worst = route_agg.sort_values("avg_arrival_delay", ascending=False).iloc[0]
-    insights.append(
-        f"**{worst.origin_airport} → {worst.destination_airport}** has the highest average arrival delay "
-        f"(**{worst.avg_arrival_delay:.1f} min**) among routes with ≥{min_flights_for_stability} flights."
-    )
-elif 'route_agg_all' in locals() and not route_agg_all.empty:
-    worst = route_agg_all.sort_values("avg_arrival_delay", ascending=False).iloc[0]
-    insights.append(
-        f"**{worst.origin_airport} → {worst.destination_airport}** shows the highest average arrival delay "
-        f"(**{worst.avg_arrival_delay:.1f} min**) across all routes (no min-flights filter)."
-    )
-
-# 2) Most punctual airline (lowest % delayed departures)
-if not airline_delay.empty and "percent_delayed_departures" in airline_delay.columns and "airline" in airline_delay.columns:
-    best_air = airline_delay.sort_values("percent_delayed_departures", ascending=True).iloc[0]
-    insights.append(
-        f"**{best_air['airline']}** has the lowest share of delayed departures "
-        f"(**{best_air['percent_delayed_departures']:.1f}%**)."
-    )
-
-# 3) Slowest airport by average departure delay
-if not airport_perf.empty and {"airport", "avg_dep_delay"} <= set(airport_perf.columns):
-    slow_ap = airport_perf.sort_values("avg_dep_delay", ascending=False).iloc[0]
-    insights.append(
-        f"**{slow_ap['airport']}** shows the highest average departure delay "
-        f"(**{float(slow_ap['avg_dep_delay']):.1f} min**)."
-    )
-
-# 4) Peak delay day (from daily trend)
-if not daily_delay.empty and {"flight_date", "avg_arrival_delay"} <= set(daily_delay.columns):
-    dd = daily_delay.copy()
-    dd["flight_date"] = pd.to_datetime(dd["flight_date"], errors="coerce")
-    dd = dd.dropna(subset=["flight_date"])
-    if not dd.empty:
-        peak = dd.sort_values("avg_arrival_delay", ascending=False).iloc[0]
-        peak_day = peak["flight_date"].date()
-        insights.append(
-            f"Delays peaked on **{peak_day}** with an average arrival delay of "
-            f"**{float(peak['avg_arrival_delay']):.1f} min**."
-        )
-
-# Render
-if insights:
-    st.markdown("\n".join([f"- {line}" for line in insights]))
-else:
-    st.info("Insights will appear once data is loaded.")
-
-
-
 # ---------- Data Loading ----------
 @st.cache_data(show_spinner=True, ttl=600)
 def load_data():
@@ -220,6 +163,67 @@ with col3:
     else:
         st.metric("Most Delayed Route", "—", help="No route data available.")
 
+
+# ---------- Key Insights (current data) ----------
+def show_key_insights():
+    st.markdown("### 📌 Key Insights (current data)")
+
+    insights = []
+
+    # 1) Most delayed route
+    if 'route_agg' in locals() and isinstance(route_agg, pd.DataFrame) and not route_agg.empty:
+        worst = route_agg.sort_values("avg_arrival_delay", ascending=False).iloc[0]
+        insights.append(
+            f"**{worst.origin_airport} → {worst.destination_airport}** has the highest average arrival delay "
+            f"(**{worst.avg_arrival_delay:.1f} min**) among routes with ≥{min_flights_for_stability} flights."
+        )
+    elif 'route_agg_all' in locals() and isinstance(route_agg_all, pd.DataFrame) and not route_agg_all.empty:
+        worst = route_agg_all.sort_values("avg_arrival_delay", ascending=False).iloc[0]
+        insights.append(
+            f"**{worst.origin_airport} → {worst.destination_airport}** shows the highest average arrival delay "
+            f"(**{worst.avg_arrival_delay:.1f} min**) across all routes (no min-flights filter)."
+        )
+
+    # 2) Most punctual airline (lowest % delayed departures)
+    if ('airline_delay' in locals() and isinstance(airline_delay, pd.DataFrame)
+        and not airline_delay.empty
+        and {"airline", "percent_delayed_departures"}.issubset(airline_delay.columns)):
+        best_air = airline_delay.sort_values("percent_delayed_departures").iloc[0]
+        insights.append(
+            f"**{best_air['airline']}** has the lowest share of delayed departures "
+            f"(**{best_air['percent_delayed_departures']:.1f}%**)."
+        )
+
+    # 3) Slowest airport by average departure delay
+    if ('airport_perf' in locals() and isinstance(airport_perf, pd.DataFrame)
+        and not airport_perf.empty
+        and {"airport", "avg_dep_delay"}.issubset(airport_perf.columns)):
+        slow_ap = airport_perf.sort_values("avg_dep_delay", ascending=False).iloc[0]
+        insights.append(
+            f"**{slow_ap['airport']}** shows the highest average departure delay "
+            f"(**{float(slow_ap['avg_dep_delay']):.1f} min**)."
+        )
+
+    # 4) Peak delay day (from daily trend)
+    if ('daily_delay' in locals() and isinstance(daily_delay, pd.DataFrame)
+        and not daily_delay.empty
+        and {"flight_date", "avg_arrival_delay"}.issubset(daily_delay.columns)):
+        dd = daily_delay.copy()
+        dd["flight_date"] = pd.to_datetime(dd["flight_date"], errors="coerce")
+        dd = dd.dropna(subset=["flight_date"])
+        if not dd.empty:
+            peak = dd.sort_values("avg_arrival_delay", ascending=False).iloc[0]
+            insights.append(
+                f"Delays peaked on **{peak['flight_date'].date()}** with an average arrival delay of "
+                f"**{float(peak['avg_arrival_delay']):.1f} min**."
+            )
+
+    if insights:
+        st.markdown("\n".join(f"- {line}" for line in insights))
+    else:
+        st.info("Insights will appear once data is loaded.")
+
+show_key_insights()
 
 # ---------- Most Delayed Routes ----------
 st.subheader("🛫 Most Delayed Routes")
