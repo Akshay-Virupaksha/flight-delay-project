@@ -47,7 +47,7 @@ st.markdown(
 with st.expander("About this data"):
     st.markdown("""
     The dashboard uses the **U.S. Bureau of Transportation Statistics (BTS) On-Time Performance dataset**.  
-    It covers **domestic U.S. flights from 2023–2024**, including delay causes such as weather, carrier issues, and late aircraft.  
+    It covers **domestic U.S. flights of the year 2024**, including delay causes such as weather, carrier issues, and late aircraft.  
     Data is stored in **PostgreSQL (Neon)** and refreshed through the ETL pipeline.
     """)
 
