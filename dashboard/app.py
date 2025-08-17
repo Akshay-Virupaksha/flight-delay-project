@@ -304,7 +304,7 @@ else:
 
 # ---------- Daily Trend ----------
 st.subheader("Daily Average Arrival Delay Trend")
-st.caption("Track how average arrival delay changes over time.")
+st.caption("Tracks how average arrival delay changes over time.")
 
 if not daily_delay.empty and {"flight_date", "avg_arrival_delay"} <= set(daily_delay.columns):
     daily_delay = daily_delay.copy()
