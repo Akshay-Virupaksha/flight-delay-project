@@ -51,7 +51,7 @@ flight-delay-project/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/akshay-v/flight-delay-project.git
+git clone https://github.com/Akshay-Virupaksha/flight-delay-project.git
 cd flight-delay-project
 ```
 
