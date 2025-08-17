@@ -111,6 +111,36 @@ Data source: PostgreSQL (via Streamlit secrets)
 
 ---
 
+## 🙋 Why I built this
+
+I wanted a recruiter-friendly, **end-to-end data engineering project** that goes beyond a pretty dashboard. This repo shows the full path from **raw U.S. flight records → warehouse (Postgres/Neon) → dbt transforms → Streamlit app**, with deployment and secrets handled properly. It mirrors how I’d build a lean, production-like analytics workload on a budget/free tier.
+
+### Key design decisions
+
+- **Real, recent data**  
+  Uses the U.S. BTS On-Time Performance dataset (domestic flights, recent period e.g., 2023–2024) so insights are current and defensible.
+
+- **Warehouse first, CSV fallback**  
+  The app loads from **Neon Postgres** when secrets are present, and falls back to **small CSV extracts** (`data/exports/`) for local demos. This keeps the repo light (no 700MB files) while still being reproducible.
+
+- **dbt for transforms**  
+  Clear, versioned SQL models create the views the app reads:  
+  `top_routes`, `airline_delay_summary`, `airport_performances`, `daily_delay_trend`.
+
+- **Streamlit for the UI**  
+  Fast to build, easy to deploy. The dashboard includes **download buttons**, **dynamic key insights**, and **simple, readable charts** (Altair/Plotly/Streamlit).
+
+- **Performance & cleanliness**  
+  - Caching with `@st.cache_data`.  
+  - Trim extreme delays (e.g., clip 0–300 min) so visuals aren’t dominated by outliers.  
+  - Only show “most delayed route” if a route has **≥300 flights** (stability threshold).  
+  - Secrets live in `.streamlit/secrets.toml` (git-ignored).
+
+- **Deployment reality**  
+  Neon free tier + Streamlit Cloud = zero-cost demo that still behaves like a real stack. Secrets and connection strings are handled securely.
+
+---
+
 ## 📌 Future Enhancements
 
 * 🌍 Add **real-time flight status API integration**
